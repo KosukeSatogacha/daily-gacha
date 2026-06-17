@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="1日1回引ける、科学哲学をテーマにしたトレーディングカードガチャ"
+  >
+  <title>Daily Research Gacha</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="background-orb background-orb--one" aria-hidden="true"></div>
+  <div class="background-orb background-orb--two" aria-hidden="true"></div>
+
+  <main class="app-shell">
+    <header class="hero">
+      <p class="eyebrow">DAILY RESEARCH GACHA</p>
+      <h1>今日の一枚を引こう</h1>
+      <p class="hero__description">
+        1日1回、科学と哲学をテーマにしたトレカが手に入ります。
+      </p>
+    </header>
+
+    <section class="gacha-panel" aria-labelledby="gacha-title">
+      <div class="status-row">
+        <div>
+          <p class="status-label">本日のガチャ</p>
+          <p id="draw-status" class="status-value">確認中...</p>
+        </div>
+        <div class="timer" aria-live="polite">
+          <span class="timer__label">次回まで</span>
+          <span id="countdown" class="timer__value">--:--:--</span>
+        </div>
+      </div>
+
+      <div class="machine" aria-hidden="true">
+        <div class="machine__glow"></div>
+        <div class="machine__window">
+          <span class="machine__symbol">?</span>
+        </div>
+        <div class="machine__base"></div>
+      </div>
+
+      <button id="draw-button" class="draw-button" type="button">
+        <span class="draw-button__main">ガチャを引く</span>
+        <span class="draw-button__sub">本日あと1回</span>
+      </button>
+
+      <p class="notice">
+        抽選状態はこのブラウザに保存されます。
+      </p>
+    </section>
+
+    <section id="result-section" class="result-section" aria-labelledby="result-title" hidden>
+      <div class="result-header">
+        <p class="eyebrow">TODAY'S CARD</p>
+        <h2 id="result-title">獲得カード</h2>
+      </div>
+
+      <div id="result-card" class="card card--large" tabindex="-1">
+        <div class="card__shine" aria-hidden="true"></div>
+        <div class="card__topline">
+          <span id="result-category" class="card__category"></span>
+          <span id="result-rarity" class="card__rarity"></span>
+        </div>
+        <div id="result-symbol" class="card__symbol" aria-hidden="true"></div>
+        <div class="card__content">
+          <h3 id="result-name" class="card__name"></h3>
+          <p id="result-description" class="card__description"></p>
+        </div>
+        <div class="card__footer">
+          <span id="result-number"></span>
+          <span id="result-quote"></span>
+        </div>
+      </div>
+
+      <p id="result-message" class="result-message" aria-live="polite"></p>
+    </section>
+
+    <section class="collection-section" aria-labelledby="collection-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">COLLECTION</p>
+          <h2 id="collection-title">カード図鑑</h2>
+        </div>
+        <p id="collection-count" class="collection-count">0 / 12</p>
+      </div>
+
+      <div id="collection-grid" class="collection-grid"></div>
+    </section>
+
+    <section class="probability-section" aria-labelledby="probability-title">
+      <h2 id="probability-title">提供割合</h2>
+      <div class="probability-list">
+        <div><span class="rarity-dot rarity-dot--ssr"></span>SSR <strong>5%</strong></div>
+        <div><span class="rarity-dot rarity-dot--sr"></span>SR <strong>20%</strong></div>
+        <div><span class="rarity-dot rarity-dot--r"></span>R <strong>35%</strong></div>
+        <div><span class="rarity-dot rarity-dot--n"></span>N <strong>40%</strong></div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="reveal-dialog" class="reveal-dialog" aria-labelledby="reveal-title">
+    <div class="reveal-dialog__content">
+      <p id="reveal-title" class="reveal-dialog__text">カードを抽選しています...</p>
+      <div class="reveal-loader" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="./script.js"></script>
+</body>
+</html>
