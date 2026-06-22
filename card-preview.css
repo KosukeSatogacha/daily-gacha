@@ -1,0 +1,446 @@
+/* =========================================================
+   カードデザイン プレビュー専用スタイル
+   - 既存の style.css には依存しない自己完結ファイル
+   - レアリティ（N / R / SR / SSR）ごとに枠・背景・光沢を変える
+   ========================================================= */
+
+/* ---------- 基本設定 ---------- */
+
+:root {
+  --bg-top: #090b16;
+  --bg-bottom: #111326;
+  --panel: rgba(20, 24, 44, 0.82);
+  --text: #f7f8ff;
+  --muted: #aab0ca;
+  --accent-light: #b9a7ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  font-family:
+    Inter, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  line-height: 1.6;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 50% -20%, #26205a 0, transparent 42%),
+    linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+}
+
+/* 背景でぼんやり光る装飾 */
+.bg-orb {
+  position: fixed;
+  z-index: -1;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  filter: blur(110px);
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.bg-orb--one {
+  top: 14%;
+  left: -180px;
+  background: #6d52ff;
+}
+
+.bg-orb--two {
+  right: -180px;
+  bottom: 8%;
+  background: #e950c4;
+}
+
+/* ---------- レイアウト ---------- */
+
+.preview-shell {
+  width: min(100% - 32px, 1040px);
+  margin: 0 auto;
+  padding: 64px 0 96px;
+}
+
+.preview-hero {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.preview-eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: var(--accent-light);
+}
+
+.preview-hero h1 {
+  margin: 0;
+  font-size: clamp(1.9rem, 6vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.preview-hero__description {
+  max-width: 640px;
+  margin: 18px auto 0;
+  color: var(--muted);
+}
+
+/* カードを並べるグリッド（広い画面では4列、狭い画面で段階的に減らす） */
+.card-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+  align-items: start;
+  justify-items: center;
+}
+
+/* =========================================================
+   カード本体
+   ========================================================= */
+
+.card {
+  /* レアリティクラスで上書きされる基準色（初期値はN相当） */
+  --rarity-color: #8c93a8;
+  --rarity-glow: rgba(140, 147, 168, 0.3);
+
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  max-width: 250px;
+  min-height: 420px;
+  flex-direction: column;
+  border: 1px solid color-mix(in srgb, var(--rarity-color) 68%, white 10%);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% 5%, color-mix(in srgb, var(--rarity-color) 36%, transparent), transparent 45%),
+    linear-gradient(160deg, #20243e 0%, #111425 100%);
+  box-shadow:
+    0 24px 55px rgba(0, 0, 0, 0.35),
+    inset 0 0 28px color-mix(in srgb, var(--rarity-color) 10%, transparent);
+  isolation: isolate;
+  /* 登場アニメーション */
+  animation: card-enter 700ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+}
+
+/* 各カードの登場を少しずつ遅らせて、順番に出るようにする */
+.card:nth-child(1) { animation-delay: 0ms; }
+.card:nth-child(2) { animation-delay: 90ms; }
+.card:nth-child(3) { animation-delay: 180ms; }
+.card:nth-child(4) { animation-delay: 270ms; }
+
+/* ---------- レアリティごとの色設定 ---------- */
+
+.card--n {
+  --rarity-color: #8c93a8;
+  --rarity-glow: rgba(140, 147, 168, 0.28);
+}
+
+.card--r {
+  --rarity-color: #62b7ff;
+  --rarity-glow: rgba(98, 183, 255, 0.4);
+}
+
+.card--sr {
+  --rarity-color: #cb82ff;
+  --rarity-glow: rgba(203, 130, 255, 0.5);
+}
+
+.card--ssr {
+  --rarity-color: #ffd75e;
+  --rarity-glow: rgba(255, 215, 94, 0.6);
+}
+
+/* レアリティが上がるほど枠を太く・発光を強くする */
+.card--r {
+  border-width: 2px;
+}
+
+.card--sr {
+  border-width: 2px;
+  box-shadow:
+    0 24px 55px rgba(0, 0, 0, 0.35),
+    0 0 26px var(--rarity-glow),
+    inset 0 0 30px color-mix(in srgb, var(--rarity-color) 14%, transparent);
+}
+
+.card--ssr {
+  border-width: 3px;
+  box-shadow:
+    0 26px 60px rgba(0, 0, 0, 0.4),
+    0 0 42px var(--rarity-glow),
+    inset 0 0 34px color-mix(in srgb, var(--rarity-color) 20%, transparent);
+  /* SSRのみ枠がゆっくり明滅する */
+  animation:
+    card-enter 700ms cubic-bezier(0.2, 0.75, 0.2, 1) both,
+    ssr-frame 2.6s ease-in-out 700ms infinite;
+}
+
+/* ---------- 光沢（shine）の演出 ---------- */
+
+.card__shine {
+  position: absolute;
+  z-index: 0;
+  inset: -80% -30%;
+  opacity: 0.16;
+  transform: rotate(18deg);
+  background: linear-gradient(90deg, transparent 35%, white 50%, transparent 65%);
+  pointer-events: none;
+}
+
+/* レアリティが高いほど光沢を強く・速くする */
+.card--r .card__shine {
+  opacity: 0.22;
+  animation: shine 5s ease-in-out infinite;
+}
+
+.card--sr .card__shine {
+  opacity: 0.3;
+  animation: shine 4s ease-in-out infinite;
+}
+
+/* SSRはホログラム風の虹色光沢を重ねる */
+.card--ssr .card__shine {
+  opacity: 0.4;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.9) 45%,
+      rgba(120, 220, 255, 0.6) 52%,
+      rgba(255, 160, 240, 0.6) 60%,
+      transparent 72%
+    );
+  animation: shine 3.2s ease-in-out infinite;
+}
+
+/* SSR専用のきらめき粒子（疑似要素で2点光らせる） */
+.card--ssr::before,
+.card--ssr::after {
+  position: absolute;
+  z-index: 2;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff7d6;
+  box-shadow: 0 0 12px 3px rgba(255, 230, 150, 0.9);
+  content: "";
+  pointer-events: none;
+  animation: sparkle 2.4s ease-in-out infinite;
+}
+
+.card--ssr::before {
+  top: 64px;
+  left: 22px;
+}
+
+.card--ssr::after {
+  right: 26px;
+  bottom: 96px;
+  animation-delay: 1.2s;
+}
+
+/* ---------- カード内の各パーツ ---------- */
+
+.card__topline,
+.card__illust,
+.card__content,
+.card__footer {
+  position: relative;
+  z-index: 1;
+}
+
+.card__topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 16px 0;
+  gap: 8px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.card__category {
+  color: var(--muted);
+}
+
+.card__rarity {
+  padding: 2px 9px;
+  border: 1px solid color-mix(in srgb, var(--rarity-color) 55%, transparent);
+  border-radius: 999px;
+  color: var(--rarity-color);
+  background: color-mix(in srgb, var(--rarity-color) 14%, transparent);
+}
+
+.card__name {
+  margin: 12px 16px 0;
+  font-size: 1.2rem;
+  line-height: 1.25;
+}
+
+/* イラスト配置領域（画像未用意のためプレースホルダー表示） */
+.card__illust {
+  display: grid;
+  min-height: 180px;
+  margin: 12px 16px;
+  border: 1px dashed color-mix(in srgb, var(--rarity-color) 40%, transparent);
+  border-radius: 16px;
+  place-items: center;
+  background:
+    radial-gradient(circle, color-mix(in srgb, var(--rarity-color) 24%, transparent), transparent 68%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.03) 0,
+      rgba(255, 255, 255, 0.03) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+  text-align: center;
+}
+
+.card__illust-symbol {
+  font-size: 4.4rem;
+  line-height: 1;
+  text-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+}
+
+.card__illust-label {
+  margin-top: 8px;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+}
+
+.card__content {
+  flex: 1;
+  padding: 0 18px;
+  text-align: left;
+}
+
+.card__description {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px 16px;
+  gap: 12px;
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.card__quote {
+  color: color-mix(in srgb, var(--rarity-color) 70%, white 20%);
+  font-weight: 800;
+}
+
+/* =========================================================
+   アニメーション
+   ========================================================= */
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(38px) rotateY(16deg) scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateY(0) scale(1);
+  }
+}
+
+@keyframes shine {
+  0%,
+  40% {
+    transform: translateX(-55%) rotate(18deg);
+  }
+
+  70%,
+  100% {
+    transform: translateX(55%) rotate(18deg);
+  }
+}
+
+@keyframes ssr-frame {
+  0%,
+  100% {
+    box-shadow:
+      0 26px 60px rgba(0, 0, 0, 0.4),
+      0 0 30px var(--rarity-glow),
+      inset 0 0 34px color-mix(in srgb, var(--rarity-color) 20%, transparent);
+  }
+
+  50% {
+    box-shadow:
+      0 26px 60px rgba(0, 0, 0, 0.4),
+      0 0 54px var(--rarity-glow),
+      inset 0 0 40px color-mix(in srgb, var(--rarity-color) 28%, transparent);
+  }
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* =========================================================
+   レスポンシブ（スマートフォン対応）
+   ========================================================= */
+
+@media (max-width: 880px) {
+  .card-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 460px) {
+  .preview-shell {
+    width: min(100% - 22px, 1040px);
+    padding-top: 44px;
+  }
+
+  .card-gallery {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .card {
+    max-width: 320px;
+  }
+}
+
+/* アニメーションを抑える設定の端末に配慮する */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

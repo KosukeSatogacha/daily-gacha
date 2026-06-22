@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="トレーディングカードのデザインを単体で確認するプレビューページ"
+  >
+  <title>Card Design Preview</title>
+  <link rel="stylesheet" href="./card-preview.css">
+</head>
+<body>
+  <div class="bg-orb bg-orb--one" aria-hidden="true"></div>
+  <div class="bg-orb bg-orb--two" aria-hidden="true"></div>
+
+  <main class="preview-shell">
+    <header class="preview-hero">
+      <p class="preview-eyebrow">CARD DESIGN PREVIEW</p>
+      <h1>カードデザイン プレビュー</h1>
+      <p class="preview-hero__description">
+        N・R・SR・SSR の4種類を1枚ずつ表示しています。<br>
+        レアリティが上がるほど、枠・背景・光沢が豪華になります。
+      </p>
+    </header>
+
+    <!-- カードはJavaScript（card-preview.js）が生成して挿入します。 -->
+    <section id="card-gallery" class="card-gallery" aria-label="カードプレビュー一覧"></section>
+  </main>
+
+  <script src="./card-preview.js"></script>
+</body>
+</html>
